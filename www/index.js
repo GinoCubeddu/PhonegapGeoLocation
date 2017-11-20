@@ -1,3 +1,13 @@
+var watching = false;
+var watchID = null;
+
+var locationOptions = {
+	maximumAge: 10000,
+	timeout: 6000,
+	enableHighAccuracy: true
+};
+
+
 //when the jQuery Mobile page is initialised
 $(document).on('pageinit', function() {
 
@@ -7,7 +17,38 @@ $(document).on('pageinit', function() {
 	//change time box to show message
 	$('#time').val("Press the button to get location data");
 
+	$("#watch").on('click', watchLocation);
+	$("#stopWatch").on('click', stopWatch);
+
 });
+
+function watchLocation() {
+	$("#watching").text("Watching")
+	watchID = navigator.geolocation.watchPosition(
+		watchLocationSuccess, watchLocationFail, locationOptions
+	)
+
+	function watchLocationSuccess(position) {
+		var time = position.timestamp;
+		var latitude = position.coords.latitude;
+		var longitude = position.coords.longitude;
+		var altitude = position.coords.altitude;
+		$("#locationHistory").append(
+			"<li>" + latitude + "," + longitude + "," + altitude + " Time: " + time + "</li>"
+		)
+	}
+
+	function watchLocationFail(position) {
+		alert("Failed to watch the position!")
+	}
+}
+
+function stopWatch() {
+	if(watchID != null) {
+		navigator.geolocation.clearWatch(watchID);
+		$("#watching").text("Not Watching")
+	}
+}
 
 
 //Call this function when you want to get the current position
@@ -32,8 +73,8 @@ function successPosition(position) {
 	var time = new Date(position.timestamp);
 	var latitude = position.coords.latitude;
 	var longitude = position.coords.longitude;
-	var accuracy = position.coords.accuracy;
 	var altitude = position.coords.altitude;
+	var accuracy = position.coords.accuracy;
 	var altitudeacc = position.coords.altitudeAccuracy;
 	//OK. Now we want to update the display with the correct values
 	$('#time').val("Recieved data at " + time.toDateString());
@@ -43,6 +84,8 @@ function successPosition(position) {
 	$('#altitude').val(altitude);
 	$('#altitudeacc').val(altitudeacc);
 }
+
+
 
 //called if the position is not obtained correctly
 function failPosition(error) {
