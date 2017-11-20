@@ -4,7 +4,7 @@ var watchID = null;
 var locationOptions = {
 	maximumAge: 10000,
 	timeout: 6000,
-	enableHighAccuracy: true
+	enableHighAccuracy: false
 };
 
 
@@ -38,7 +38,7 @@ function watchLocation() {
 		)
 	}
 
-	function watchLocationFail(position) {
+	function watchLocationFail(error) {
 		alert("Failed to watch the position!")
 	}
 }
