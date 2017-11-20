@@ -30,9 +30,9 @@ function watchLocation() {
 
 	function watchLocationSuccess(position) {
 		var time = position.timestamp;
-		var latitude = position.coords.latitude;
-		var longitude = position.coords.longitude;
-		var altitude = position.coords.altitude;
+		var latitude = position.coords.latitude.toFixed(2);
+		var longitude = position.coords.longitude.toFixed(2);
+		var altitude = position.coords.altitude.toFixed(2);
 		$("#locationHistory").append(
 			"<li>" + latitude + "," + longitude + "," + altitude + " Time: " + time + "</li>"
 		)
